@@ -1,6 +1,6 @@
 (function() {
     var margin = { top: 30, left: 30, right: 30, bottom: 30},
-        height = 500 - margin.top - margin.bottom,
+        height = 420 - margin.top - margin.bottom,
         height1 = 200 - margin.top - margin.bottom,
         width = screen.width/2 - margin.left - margin.right;
 
@@ -138,11 +138,35 @@
                 maxNumberOfElements: 10,
                 match: {
                     enabled: true
+                },
+                showAnimation: {
+                    type: "slide",
+                    time: 300
+                },
+                hideAnimation: {
+                    type: "slide",
+                    time: 300
                 }
-            }
+            },
+            theme: "round"
         };
         $("#trigger-event2").easyAutocomplete(options);
 
+
+
+        randomize(dcdata)
+        randomize(dcdata)
+        randomize(dcdata)
+        randomize(dcdata)
+        randomize(dcdata)
+           
+    }
+
+    function randomize(dcdata) {
+        var random_index = Math.floor(Math.random() * dcdata.length);
+                data_under.push(dcdata[random_index]);
+                createVis(dcdata[random_index]);
+                data_under_plot();
     }
     function createVis(data_value){
 
@@ -254,7 +278,7 @@
                 .attr("x", width / 2)
                 .attr("y", 160)
                 .attr("text-anchor", "middle")
-                .text("Recent DC Superhero Searches");
+                .text("Some DC Superheros");
 
             charts.each(function (d, i) {
                 console.log("Here is", d, i);
@@ -288,7 +312,7 @@
 
 
                 g.append("text")
-                    .attr("class", "heronamemv")
+                    .attr("class", "heronamedc")
                     .attr("x", 0)
                     .attr("y", -70)
                     .attr("text-anchor", "middle")

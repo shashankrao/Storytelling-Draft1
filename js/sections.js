@@ -10,7 +10,7 @@ var scrollVis = function() {
   // and margins of the vis area.
 
     var margin = { top: 30, left: 30, right: 30, bottom: 30},
-      height = 600 - margin.top - margin.bottom,
+      height = 650 - margin.top - margin.bottom,
       width = 800 - margin.left - margin.right;
 
 
@@ -24,7 +24,8 @@ var scrollVis = function() {
       .range([height,0]);
 
 
-  var colorScale = d3.scaleOrdinal().domain(["Amber","Black","Blue","Blue / White", "Brown", "Gold", "Green", "Green / Blue", "Grey", "Hazel", "Purple", "Red", "Silver", "Violet", "White", "White / Red", "Yellow", "Yellow / Blue", "Yellow (without irises)"]).range(["#F17F42",
+  var colorScale = d3.scaleOrdinal().domain(["Amber","Black","Blue","Blue / White", "Brown", "Gold", "Green", "Green / Blue", "Grey", "Hazel", "Purple", "Red", "Silver", "Violet", "White", "White / Red", "Yellow", "Yellow / Blue", "Yellow (without irises)"]).range([
+    "#F17F42",
     "black",
     "#4F86C6",
     "#84B1ED",
@@ -49,6 +50,14 @@ var scrollVis = function() {
 
   var xHeroScale = d3.scaleOrdinal().domain(["good","bad","neutral","-"]).range(["200", "450", "650"]);
 
+   var xforcesc = d3.scaleOrdinal().domain(["Amber","Black","Blue","Blue / White", "Brown", "Gold", "Green", "Green / Blue", "Grey", "Hazel", "Purple", "Red", "Silver", "Violet", "White", "White / Red", "Yellow", "Yellow / Blue", "Yellow (without irises)"])
+                    .range([300,350,200,250,400,450,500,550,600,650,225,275,325,375,425,475,525,575,625,675]);
+
+  
+   var yforcesc = d3.scaleOrdinal().domain(["Amber","Black","Blue","Blue / White", "Brown", "Gold", "Green", "Green / Blue", "Grey", "Hazel", "Purple", "Red", "Silver", "Violet", "White", "White / Red", "Yellow", "Yellow / Blue", "Yellow (without irises)"])
+                    .range([200,200,200,200,200,200,200,200,200,200,400,400,400,400,400,400,400,400,400,400]);
+                    
+
 
   var places = {};
 
@@ -56,7 +65,7 @@ var scrollVis = function() {
       .force("x", d3.forceX(function(d) {
         return xHeroScale(d.Alignment);
       }).strength(function(d) {
-        return 0.02;
+        return 0.04;
       }))
       .force("y", d3.forceY(function(d) {
         return 300;
@@ -179,16 +188,7 @@ var scrollVis = function() {
         .attr("opacity", 0.9);
 
 
-    var xAxis = d3.axisBottom(xPositionScale)
-    svg.append("g")
-        .attr("class", "axis x-axis")
-        .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
 
-    var yAxis = d3.axisLeft(yPositionScale);
-    svg.append("g")
-        .attr("class", "axis y-axis")
-        .call(yAxis);
 
 
 
@@ -207,6 +207,9 @@ var scrollVis = function() {
     activateFunctions[0] = page0;
     activateFunctions[1] = page1;
     activateFunctions[2] = page2;
+    activateFunctions[3] = page3;
+    activateFunctions[4] = lastPage;
+
 
     // updateFunctions are called while
     // in a particular section to update
@@ -214,7 +217,7 @@ var scrollVis = function() {
     // Most sections do not need to be updated
     // for all scrolling and so are set to
     // no-op functions.
-    for(var i = 0; i < 3; i++) {
+    for(var i = 0; i < 5; i++) {
       updateFunctions[i] = function() {};
     }
   };
@@ -242,14 +245,43 @@ var scrollVis = function() {
    * shows: intro title
    *
    */
-  function page0() {
-    inForce = false;
-    console.log("page0!!")
-    d3.select(".y-axis")
-              .attr("opacity", 1)
 
-          d3.select(".x-axis")
-              .attr("opacity", 1)
+
+  function lastPage() {
+    var vis = d3.select("#vis");
+    vis.style("display", "none"); 
+  }
+
+  function page0() {
+    var vis = d3.select("#vis");
+    vis.style("display", "none"); 
+  }
+   
+  function page1() {
+    var vis = d3.select("#vis");
+    vis.style("display", "inline-block"); 
+
+
+    svg.selectAll("circle")
+    .attr("fill", function(d) {
+      return genderscale(d.Gender)
+    })
+
+
+    console.log("page1!!")
+
+    svg.selectAll(".axis").remove()
+
+        var xAxis = d3.axisBottom(xPositionScale)
+    svg.append("g")
+        .attr("class", "axis x-axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    var yAxis = d3.axisLeft(yPositionScale);
+    svg.append("g")
+        .attr("class", "axis y-axis")
+        .call(yAxis);
 
           svg.selectAll(".country-text")
               .remove();
@@ -275,10 +307,21 @@ var scrollVis = function() {
    * shows: filler count title
    *
    */
-  function page1() {
-    console.log("page1!!")
+  function page2() {
 
-    
+    svg.selectAll("circle")
+    .attr("fill", function(d) {
+      return genderscale(d.Gender)
+    })
+
+
+    svg.selectAll(".axis").remove()
+
+
+    var vis = d3.select("#vis");
+    vis.style("display", "inline-block"); 
+    console.log("page2!!")
+
     d3.select(".y-axis")
               .attr("opacity", 0)
 
@@ -291,14 +334,14 @@ var scrollVis = function() {
       return genderscale(d.Gender)
     })
 
-    if(inForce) {
-      return;
-    }
-
-          inForce = true
           simulation.nodes(marvel)
+              .force("x", d3.forceX(function(d) {
+                return xHeroScale(d.Alignment);
+              }).strength(function(d) {
+                return 0.04;
+              }))
               .on('tick', ticked)
-              .alphaTarget(25)
+              .alphaTarget(8)
               .restart()
 
           var splitTimeout = null;
@@ -331,21 +374,36 @@ var scrollVis = function() {
               .attr("style", "font-family: Verdana;font-size: 14px;");
   }
 
-  /**
-   * showGrid - square grid
-   *
-   * hides: filler count title
-   * hides: filler highlight in grid
-   * shows: square grid
-   *
-   */
-  function page2() {
-    inForce = true;
+  function page3() {
+    var vis = d3.select("#vis");
+    vis.style("display", "inline-block"); 
     svg.selectAll("circle")
     .transition()
     .attr("fill", function(d) {
       return colorScale(d.EyeColor)
     })
+
+
+
+    svg.selectAll(".axis").remove()
+
+
+          simulation.nodes(marvel)
+              .on('tick', ticked)
+              .alphaTarget(3)
+              .force("x", d3.forceX(function(d) {
+                return xforcesc(d.EyeColor);
+              }).strength(function(d) {
+                return 0.04;
+              }))
+              .restart()
+
+          var splitTimeout2 = null;
+          splitTimeout2 = setTimeout(function() {
+            simulation.alphaTarget(0.2).restart()
+          }, 350);
+
+          svg.selectAll("text").remove();
   }
 
 
@@ -417,6 +475,14 @@ function display(error, data) {
   scroll.on('progress', function(d,i){
     plot.update(d,i);
   });
+
+}
+
+function combine(error, big_data_1, big_data_2, big_data_3) {
+    if (error) {
+        console.log(error);
+    }
+    console.log(d3.merge([big_data_1, big_data_2, big_data_3]));
 }
 
 d3.queue()

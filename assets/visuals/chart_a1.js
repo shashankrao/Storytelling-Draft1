@@ -1,6 +1,6 @@
 (function() {
     var margin = { top: 30, left: 30, right: 30, bottom: 30},
-        height = 500 - margin.top - margin.bottom,
+        height = 420 - margin.top - margin.bottom,
         height1 = 200 - margin.top - margin.bottom,
         width = screen.width/2 - margin.left - margin.right;
 
@@ -133,10 +133,39 @@
                 maxNumberOfElements: 10,
                 match: {
                     enabled: true
+                },
+                showAnimation: {
+                    type: "slide",
+                    time: 300
+                },
+                hideAnimation: {
+                    type: "slide",
+                    time: 300
                 }
-            }
+            },
+            theme: "round"
         };
         $("#trigger-event1").easyAutocomplete(options);
+
+
+        randomize(marveldata)
+
+        randomize(marveldata)
+
+        randomize(marveldata)
+
+        randomize(marveldata)
+
+        randomize(marveldata)
+
+    }
+
+    function randomize(marveldata) {
+                console.log(marveldata.length);
+                var random_index = Math.floor(Math.random() * marveldata.length);
+                data_under.push(marveldata[random_index]);
+                createVis(marveldata[random_index]);
+                data_under_plot();
 
     }
     function createVis(data_value){
@@ -251,7 +280,7 @@
                 .attr("x", width/2)
                 .attr("y", 160)
                 .attr("text-anchor", "middle")
-                .text("Recent Marvel Superhero Searches");
+                .text("Some Marvel Superheros");
 
             charts.each(function(d, i) {
                 console.log("Here is", d, i);
